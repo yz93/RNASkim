@@ -29,6 +29,12 @@ int SingleFastaReader::read(vector<string>* ids, vector<string>* seqs) {
       // remove the first letter in fasta file. (should be either '>'
       // or '@'.
       ids->push_back(id.substr(1));
+
+      // convert reads to uppercase
+      for (int i = 0; i < read.size(); i++){
+        read[i] = toupper(read[i]);
+      }
+
       seqs->push_back(read);
       total_reads ++;
     } else {
