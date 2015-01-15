@@ -35,6 +35,13 @@ int SingleFastaReader::read(vector<string>* ids, vector<string>* seqs) {
         read[i] = toupper(read[i]);
       }
 
+     // convert non ACGT character to N
+     for (int i = 0; i < read.size(); i++){
+	if(read[i] != 'A' && read[i] != 'C' && read[i] != 'T' && read[i] != 'G' && read[i] != '|'){
+		read[i] = 'N';
+	}
+      }
+
       seqs->push_back(read);
       total_reads ++;
     } else {
@@ -101,6 +108,13 @@ int RSPairReader::read_from_fd(fstream &fd, vector<string> * reads) {
     // ignore the id line
     fd.ignore(256 * 256,'\n');
     fd >> reads->at(total_reads);
+
+    // 2015-01-14 conver lowercase reads to uppercase
+    for(int i = 0; i < reads->at(total_reads).size(); i++)
+    {
+	reads->at(total_reads)[i] = toupper(reads->at(total_reads)[i]);
+    }
+
     // ignore the remaining new line character
     fd.ignore(256 * 256,'\n');
 
