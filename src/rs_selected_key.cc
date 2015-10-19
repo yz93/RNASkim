@@ -44,9 +44,9 @@ namespace rs {
 		string sigmer_cnt;
 		string length_str;
 		
-		std::ifstream cluster_f("Z:\\RNASkim\\RNASkim\\src\\emfiles\\cluster_info.txt"); // if I want to use \ in a string in c++ I have to use '\\'
-		std::ifstream sig_cnt_f("Z:\\RNASkim\\RNASkim\\src\\emfiles\\sigmer_occurance.txt");
-		std::ifstream sig_det_f("Z:\\RNASkim\\RNASkim\\src\\emfiles\\sigmer_detail.txt");
+		std::ifstream cluster_f(cluster_file); // "Z:\\RNASkim\\RNASkim\\src\\emfiles\\cluster_info.txt"
+		std::ifstream sig_cnt_f(sigmer_count_file); //"Z:\\RNASkim\\RNASkim\\src\\emfiles\\sigmer_occurance.txt"
+		std::ifstream sig_det_f(sigmer_details); //"Z:\\RNASkim\\RNASkim\\src\\emfiles\\sigmer_detail.txt"
 
 		while (getline(cluster_f, line)){
 			std::istringstream iss(line);
@@ -55,7 +55,7 @@ namespace rs {
 			iss >> length_str;  // skip transcript index
 			iss >> length_str;
 			ret[gene].tids.push_back(tid);
-			ret[gene].lengths.push_back(stoi(length_str));
+			ret[gene].lengths.push_back(std::stoi(length_str));
 			ret[gene].gid = "gene";
 		}
 
@@ -67,7 +67,7 @@ namespace rs {
 			iss >> sigmer;  // skip a random binary string
 			iss >> sigmer;  
 			iss >> sigmer_cnt;
-			ret[gene].keys.push_back(Key(sigmer, stoi(sigmer_cnt)));
+			ret[gene].keys.push_back(Key(sigmer, std::stoi(sigmer_cnt)));
 		}
 
 		while (getline(sig_det_f, line)){
@@ -83,7 +83,7 @@ namespace rs {
 			vector<int> positions;
 			for (size_t i = 0; i < positions_str.size(); ++i){
 				//cout << stoi(positions_str[i]) << endl;
-				positions.push_back(stoi(positions_str[i]));
+				positions.push_back(std::stoi(positions_str[i]));
 			}
 			// ================================================================
 			TranscriptInfo temp_ti(stoi(tidx));  // create a TranscriptInfo object
@@ -103,7 +103,7 @@ namespace rs {
 		return ret;
 	}
 }
-
+/*
 int main(){
 	rs::SelectedKey sk;
 	map<std::string, rs::SelectedKey> complete_gene_to_sk;
@@ -134,3 +134,4 @@ int main(){
 		++x;
 	}
 }
+*/

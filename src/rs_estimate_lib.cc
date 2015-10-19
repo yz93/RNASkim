@@ -11,7 +11,7 @@
 //#include "gflags/gflags.h"
 //#include "glog/logging.h"
 
-#include "rs_common.h"
+//#include "rs_common.h"
 //#include "proto/rnasigs.pb.h"
 //#include "proto_data.h"
 #include "rs_estimate_lib.h"
@@ -26,7 +26,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-int FLAGS_rs_length = 40;
+
 
 #define DEBUG 0
 //DEFINE_int32(rs_length, 40,
@@ -34,6 +34,7 @@ int FLAGS_rs_length = 40;
 //DECLARE_int32(rs_length);
 
 namespace rs{
+  //int FLAGS_rs_length = 40;
   double average(const vector<double>& values) {
     if (values.size() == 0) return 0;
     double sum = 0;
@@ -270,7 +271,7 @@ namespace rs{
         // debug_vector(weights);
         cout << count << endl;
       }
-      debug_vector(new_pi);
+      //debug_vector(new_pi);
     }
     return ;
   }

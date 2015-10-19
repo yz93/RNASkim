@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 
-using std::endl;
+//using std::endl;
 using std::fstream;
 using std::ios;
 using std::map;

@@ -35,8 +35,8 @@ DEFINE_int32(rs_length, 40,
 DEFINE_int32(read_length, 100,
            "The length of the RNA-seq reads.");
 */
-int FLAGS_read_length = 100;
-int FLAGS_rs_length = 40;
+
+//int FLAGS_rs_length = 40;
 
 #define DEBUG 0
 
