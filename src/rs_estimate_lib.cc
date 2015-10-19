@@ -8,12 +8,12 @@
 #include <cmath>
 #include <algorithm>
 
-#include "gflags/gflags.h"
-#include "glog/logging.h"
+//#include "gflags/gflags.h"
+//#include "glog/logging.h"
 
 #include "rs_common.h"
-#include "proto/rnasigs.pb.h"
-#include "proto_data.h"
+//#include "proto/rnasigs.pb.h"
+//#include "proto_data.h"
 #include "rs_estimate_lib.h"
 
 using std::cout;
@@ -26,9 +26,12 @@ using std::set;
 using std::string;
 using std::vector;
 
-#define DEBUG 0
+int FLAGS_rs_length = 40;
 
-DECLARE_int32(rs_length);
+#define DEBUG 0
+//DEFINE_int32(rs_length, 40,
+//	"The length of the sig-mer.");
+//DECLARE_int32(rs_length);
 
 namespace rs{
   double average(const vector<double>& values) {
@@ -77,8 +80,8 @@ namespace rs{
       w += left_possible_locations(length, fragment_length,
                                    read_length, length - pos - 1);
       if (w < 0) {
-        LOG(ERROR) << length << ' ' << pos;
-        LOG(ERROR) << w;
+        //LOG(ERROR) << length << ' ' << pos;
+        //LOG(ERROR) << w;
       }
       if ( w < 1) {
         w = 1;
@@ -275,19 +278,19 @@ namespace rs{
   bool prepare_SignatureInfoDB(const SelectedKey &sk, SignatureInfoDB *db) {
     bool run_em = false;
     for (int i = 0; i < sk.keys_size(); i++) {
-      auto& key = sk.keys(i);
+      auto& key = sk.keys[i];
       set<string> tids;
       vector<double> weights(sk.tids_size(), 0);
 
       for (int j = 0; j < key.transcript_infos_size(); j ++) {
-        auto & info = key.transcript_infos(j);
-        tids.insert(sk.tids(info.tidx()));
+        auto & info = key.transcript_infos[j];
+        tids.insert(sk.tids[info.tidx]);
         vector<int> pos;
-        for (auto p : info.positions()) {
+        for (auto p : info.positions) {
           pos.push_back(p);
         }
-        weights[info.tidx()] +=
-          weight_of_kmer(sk.lengths(info.tidx()), pos);
+        weights[info.tidx] +=
+          weight_of_kmer(sk.lengths[info.tidx], pos);
 
         // cout << sk.tids(info.tidx()) << endl;
         // cout << key.key() << endl;
@@ -295,15 +298,15 @@ namespace rs{
       }
       auto iter = db->find(weights);
       if (iter != db->end()) {
-        iter->second.total_counts += key.count();
+        iter->second.total_counts += key.count;
         iter->second.occurences += 1;
       } else {
         SignatureInfo si;
-        si.total_counts = key.count();
+        si.total_counts = key.count;
         si.occurences = 1;
         (*db)[weights] = si;
       }
-      if (key.count() != 0) {
+      if (key.count != 0) {
         run_em = true;
       }
       // if (DEBUG && weights[inspected_tid] != 0) {

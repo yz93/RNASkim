@@ -27,6 +27,7 @@ namespace rs {
 		string key;  // k-mer sequence
 		vector<TranscriptInfo> transcript_infos;  // its associated transcripts information
 		int count;  // count of this k-mer (in a gene)
+		int transcript_infos_size() const { return transcript_infos.size(); }
 	};
 
 	class SelectedKey{
@@ -35,6 +36,8 @@ namespace rs {
 		vector<Key> keys;
 		vector<string> tids;
 		vector<int> lengths;  // records the length of corresponding (at same array index) transcript in tids.
+		int tids_size() const { return tids.size(); }
+		int keys_size() const { return keys.size(); }
 	};
 
 	map<string, SelectedKey> process_selected_keys(string cluster_file, string sigmer_count_file, string sigmer_details);

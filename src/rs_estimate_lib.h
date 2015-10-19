@@ -1,7 +1,7 @@
 #include <vector>
 #include <map>
-
-#include "proto/rnasigs.pb.h"
+#include "rs_selected_key.h"
+//#include "proto/rnasigs.pb.h"
 
 using std::vector;
 using std::map;
@@ -22,6 +22,4 @@ namespace rs {
           vector<double>* count_per_tid, vector<double>* pi);
 
   bool prepare_SignatureInfoDB(const SelectedKey &sk, SignatureInfoDB *db);
-
-	void process_selected_keys;
 } // namesapce
