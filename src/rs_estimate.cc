@@ -179,6 +179,7 @@ int main(int argc, char *argv[]) {
 		if (std::string(argv[i]) == "--cluster_info_file") {
 			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
 				++i;
+				//cout<<argv[i]<<endl;
 				path1 = argv[i];
 			}
 			else { 
@@ -189,6 +190,7 @@ int main(int argc, char *argv[]) {
 		else if (std::string(argv[i]) == "--sigmer_count_file"){
 			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
 				++i;
+				//cout<<argv[i]<<endl;
 				path2 = argv[i];
 			}
 			else { // Uh-oh, there was no argument to the destination option.
@@ -199,6 +201,7 @@ int main(int argc, char *argv[]) {
 		else if (std::string(argv[i]) == "--sigmer_details_file"){
 			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
 				++i;
+				//cout<<argv[i]<<endl;
 				path3 = argv[i];
 			}
 			else {
@@ -209,7 +212,8 @@ int main(int argc, char *argv[]) {
 		else if (std::string(argv[i]) == "--read_length"){
 			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
 				++i;
-				read_length = stoi(string(argv[i]));
+				//cout<<argv[i]<<endl;
+				read_length = std::stoi(string(argv[i]));
 			}
 			else {
 				std::cerr << "--sigmer_details_file option requires one argument." << std::endl;
@@ -217,6 +221,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		else {
+			std::cerr<<argv[i]<<" "<<argv[i+1]<<std::endl;
 			std::cerr << "Wrong Format" << std::endl;
 		}
 	}
