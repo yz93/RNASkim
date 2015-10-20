@@ -13,6 +13,7 @@
 
 //#include "rs_common.h"
 #include "rs_estimate_lib.h"
+#include "rs_selected_key.h"
 //#include "proto/rnasigs.pb.h"
 //#include "proto_data.h"
 
@@ -41,10 +42,11 @@ DEFINE_int32(read_length, 100,
 #define DEBUG 0
 
 namespace rs {
+	size_t sig_len = 40;
   class EstimateMain {
   public:
-		EstimateMain(const string path1, const string path2, const string path3)
-			: m_path1(path1), m_path2(path2), m_path3(path3){};
+		EstimateMain(const string path1, const string path2, const string path3, const size_t read_length)
+			: m_path1(path1), m_path2(path2), m_path3(path3), m_read_length(read_length){};
 
     void run() {
       SelectedKey sk;
@@ -126,9 +128,9 @@ namespace rs {
       double estimated_total_reads = 0;
       double estimated_total_abundance = 0;
       for (auto& iter : profile) {
-        iter.second /= FLAGS_read_length;
+        iter.second /= m_read_length;
         iter.second =
-            iter.second * FLAGS_read_length / (FLAGS_read_length - FLAGS_rs_length);
+					iter.second * m_read_length / (m_read_length - sig_len);  // FLAGS_rs_length May take average sigmer length?
         estimated_total_reads += iter.second;
         estimated_total_abundance += iter.second / tid2length[iter.first];
       }
@@ -155,6 +157,7 @@ namespace rs {
     string m_path1;
 		string m_path2;
 		string m_path3;
+		size_t m_read_length;
   };
 }  // namespace rs
 
@@ -162,8 +165,8 @@ namespace rs {
 int main(int argc, char *argv[]) {
   //google::InitGoogleLogging(argv[0]);
   //google::ParseCommandLineFlags(&argc, &argv, true);
-	if (argc < 7) {
-		std::cerr << "Usage: " << argv[0] << "--cluster_info_file PATH --sigmer_count_file PATH --sigmer_details_file PATH" << std::endl;
+	if (argc < 9) {
+		std::cerr << "Usage: " << argv[0] << "--cluster_info_file PATH --sigmer_count_file PATH --sigmer_details_file PATH --read_length LEN" << std::endl;
 		return 1;
 	}
 
@@ -171,6 +174,7 @@ int main(int argc, char *argv[]) {
 	std::string path1;
 	std::string path2;
 	std::string path3;
+	size_t read_length= 100;
 	for (int i = 1; i < argc; ++i) {
 		if (std::string(argv[i]) == "--cluster_info_file") {
 			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
@@ -202,10 +206,20 @@ int main(int argc, char *argv[]) {
 				return 1;
 			}
 		}
+		else if (std::string(argv[i]) == "--read_length"){
+			if (i + 1 < argc) { // Make sure we aren't at the end of argv!
+				++i;
+				read_length = stoi(string(argv[i]));
+			}
+			else {
+				std::cerr << "--sigmer_details_file option requires one argument." << std::endl;
+				return 1;
+			}
+		}
 		else {
 			std::cerr << "Wrong Format" << std::endl;
 		}
 	}
-  rs::EstimateMain em(path1, path2, path3);
+	rs::EstimateMain em(path1, path2, path3, read_length);
   em.run();
 }

@@ -51,17 +51,18 @@ namespace rs{
   int left_possible_locations(int transcript_length,
                               int fragment_length,
                               int read_length,
-                              int position) {
-    if (position > transcript_length - fragment_length + read_length - FLAGS_rs_length)
+                              int position,
+															int sigmer_length) {
+		if (position > transcript_length - fragment_length + read_length - sigmer_length)  //FLAGS_rs_length
       return 0;
     // the maximal number of  possible ways to cover the kmer
-    int ret = read_length - FLAGS_rs_length + 1;
+		int ret = read_length - sigmer_length + 1;  //FLAGS_rs_length
     ret = std::min<int>(position + 1, ret);
-    ret = std::min<int>(transcript_length - fragment_length + read_length - position - FLAGS_rs_length + 1, ret);
+		ret = std::min<int>(transcript_length - fragment_length + read_length - position - sigmer_length + 1, ret);  //FLAGS_rs_length
     return ret;
   }
 
-  double weight_of_kmer(int length, vector<int> positions) {
+  double weight_of_kmer(int length, vector<int> positions, int sigmer_length) {
     double weight = 0;
     // why 150? this is a rough estimation, and I am not sure what
     // is the best value. Only a half part of the read will cover
@@ -70,16 +71,16 @@ namespace rs{
     int read_length = 95;
     // total number of ways to cover a kmer (left side and right side
     // fragment)
-    int total_num_ways = (read_length - FLAGS_rs_length + 1) * 2;
+		int total_num_ways = (read_length - sigmer_length + 1) * 2;  //FLAGS_rs_length
     for (int pos : positions) {
       // the number of ways that the kmer is covered by the left read
       // in the fragment
       int w = left_possible_locations(length, fragment_length,
-                                      read_length, pos);
+                                      read_length, pos, sigmer_length);
       // the number of ways that the kmer is covered by the right read
       // in the fragment. (just need to reverse the position)
       w += left_possible_locations(length, fragment_length,
-                                   read_length, length - pos - 1);
+                                   read_length, length - pos - 1, sigmer_length);
       if (w < 0) {
         //LOG(ERROR) << length << ' ' << pos;
         //LOG(ERROR) << w;
@@ -291,7 +292,7 @@ namespace rs{
           pos.push_back(p);
         }
         weights[info.tidx] +=
-          weight_of_kmer(sk.lengths[info.tidx], pos);
+          weight_of_kmer(sk.lengths[info.tidx], pos, key.key.size());  // pass in the length of k-mer
 
         // cout << sk.tids(info.tidx()) << endl;
         // cout << key.key() << endl;

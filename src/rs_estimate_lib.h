@@ -5,8 +5,8 @@
 
 using std::vector;
 using std::map;
- extern int FLAGS_read_length = 40;
- extern int FLAGS_rs_length = 40;
+ //extern int FLAGS_read_length = 40;
+ //extern int FLAGS_rs_length = 40;
 namespace rs {
   //extern const int FLAGS_rs_length = 40;
   class SignatureInfo {
